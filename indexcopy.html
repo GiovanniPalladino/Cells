@@ -5,10 +5,6 @@
 <title>Organismo Tipografico</title>
 
 <style>
-:root {
-    --specimen-green: #45910e;
-}
-
 @font-face {
     font-family: 'G15';
     src: url('G15_Font.ttf') format('truetype');
@@ -27,7 +23,6 @@
 body {
     overflow-x: hidden;
     background-color: white;
-    color: var(--specimen-green);
 }
 
 /* ======================
@@ -38,15 +33,15 @@ body {
     left: 40px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 34px;
+    font-size: 28px;
     cursor: pointer;
     z-index: 1000;
     display: flex;
     gap: 0.5em;
-    font-variant-caps: normal;
+    font-variant-caps: small-caps;
 
-    color: var(--specimen-green);
-    mix-blend-mode: normal;
+    color: #fff;
+    mix-blend-mode: difference;
 }
 
 #title span {
@@ -164,12 +159,12 @@ body {
 .specimen-lede {
     font-size: 20px;
     line-height: 1.5;
-    color: var(--specimen-green);
+    color: #1f1f1f;
     max-width: 520px;
 }
 
 .scale-note {
-    color: var(--specimen-green);
+    color: #c03c3c;
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -180,11 +175,11 @@ body {
     grid-template-columns: 64px 1fr;
     gap: 10px 16px;
     align-items: baseline;
-    color: var(--specimen-green);
+    color: #1d1d1d;
 }
 
 .scale-size {
-    color: var(--specimen-green);
+    color: #c03c3c;
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -218,14 +213,14 @@ body {
     font-size: 13px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--specimen-green);
+    color: #1f1f1f;
 }
 
 .size-header::after {
     content: '';
     flex: 1;
     height: 2px;
-    background: var(--specimen-green);
+    background: #1f1f1f;
 }
 
 .size-letter {
@@ -233,20 +228,20 @@ body {
     line-height: 0.9;
 }
 
-.size-letter.small { color: var(--specimen-green); font-size: clamp(120px, 18vw, 180px); }
-.size-letter.medium { color: var(--specimen-green); font-size: clamp(160px, 22vw, 220px); }
-.size-letter.large { color: var(--specimen-green); font-size: clamp(200px, 28vw, 300px); }
+.size-letter.small { color: #118845; font-size: clamp(120px, 18vw, 180px); }
+.size-letter.medium { color: #0f78d1; font-size: clamp(160px, 22vw, 220px); }
+.size-letter.large { color: #d5352f; font-size: clamp(200px, 28vw, 300px); }
 
 .size-copy {
     font-size: 16px;
     line-height: 1.4;
-    color: var(--specimen-green);
+    color: #1f1f1f;
     max-width: 260px;
 }
 
-.size-copy.small { color: var(--specimen-green); }
-.size-copy.medium { color: var(--specimen-green); }
-.size-copy.large { color: var(--specimen-green); }
+.size-copy.small { color: #118845; }
+.size-copy.medium { color: #0f78d1; }
+.size-copy.large { color: #d5352f; }
 
 /* ======================
    GLYPH VIEWER
@@ -259,25 +254,19 @@ body {
     align-items: start;
 }
 
-.glyph-left {
-    position: sticky;
-    top: 120px;
-    align-self: start;
-}
-
 .glyph-left h2 {
     font-size: 28px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: 18px;
-    color: var(--specimen-green);
+    color: #1d1d1d;
     font-weight: 400;
 }
 
 .glyph-preview {
     position: relative;
     min-height: 520px;
-    background: #ffffff;
+    background: #fdfdf9;
     border: 1px solid #e4e2da;
     box-shadow: 0 12px 40px rgba(0,0,0,0.05);
     padding: 40px 32px 64px;
@@ -288,11 +277,11 @@ body {
     font-size: clamp(220px, 28vw, 340px);
     font-weight: 400;
     line-height: 1;
-    color: var(--specimen-green);
+    color: #111;
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 28%;
+    transform: translateX(-50%);
     z-index: 2;
 }
 
@@ -303,54 +292,18 @@ body {
     display: flex;
     gap: 16px;
     font-size: 13px;
-    color: var(--specimen-green);
+    color: #5a574d;
 }
 
 .glyph-right {
     display: grid;
     gap: 18px;
-    max-height: calc(100vh - 60px); /* taller to reveal ~2 more rows */
-    min-height: 680px;
-    overflow-y: auto;
-    padding-right: 6px;
-    position: relative;
-    scrollbar-width: thin;
-    scrollbar-color: #cfcac0 transparent;
-}
-
-.glyph-right::-webkit-scrollbar {
-    width: 8px;
-}
-
-.glyph-right::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.glyph-right::-webkit-scrollbar-thumb {
-    background: transparent;
-    border: 1.5px solid #d5d0c6;
-    border-radius: 10px;
-    min-height: 8px;
-    max-height: 16px;
-}
-.glyph-legend {
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    background: linear-gradient(180deg, #ffffff 85%, rgba(255,255,255,0));
-    padding-top: 6px;
-    padding-bottom: 10px;
 }
 
 .glyph-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
     gap: 8px;
-}
-
-.glyph-anchor {
-    grid-column: 1 / -1;
-    height: 0;
 }
 
 .glyph-cell {
@@ -363,7 +316,6 @@ body {
     font-size: 26px;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    color: var(--specimen-green);
 }
 
 .glyph-cell.smallcaps {
@@ -372,35 +324,27 @@ body {
 
 .glyph-cell:hover,
 .glyph-cell.active {
-    background: #e7f4db;
-    border-color: #9acb6d;
+    background: #ffe95f;
+    border-color: #c3b33f;
     box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 .glyph-legend {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
-    flex-wrap: wrap;
+    font-size: 13px;
+    color: #5a574d;
 }
 
 .glyph-pill {
-    padding: 9px 16px;
+    padding: 8px 14px;
     border: 1px solid #d5d3cb;
-    border-radius: 16px;
+    border-radius: 14px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-size: 11px;
     background: #fff;
-    color: var(--specimen-green);
-    cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.glyph-pill:hover {
-    background: #e7f4db;
-    border-color: #9acb6d;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 @media (max-width: 1024px) {
@@ -416,8 +360,6 @@ body {
         padding: 120px 28px 140px;
     }
     .glyph-preview { min-height: 420px; }
-    .glyph-left { position: relative; top: 0; }
-    .glyph-right { max-height: none; overflow: visible; padding-right: 0; }
 }
 
 @media (max-width: 720px) {
@@ -534,12 +476,9 @@ body {
 
     <div class="glyph-right">
         <div class="glyph-legend">
-            <button class="glyph-pill" data-target="maiuscole">Maiuscole</button>
-            <button class="glyph-pill" data-target="minuscole">Minuscole</button>
-            <button class="glyph-pill" data-target="maiuscoletto">Maiuscoletto</button>
-            <button class="glyph-pill" data-target="numeri">Numeri</button>
-            <button class="glyph-pill" data-target="accenti">Accenti</button>
-            <button class="glyph-pill" data-target="glifi">Glifi</button>
+            <span class="glyph-pill">Set base</span>
+            <span class="glyph-pill">Latino</span>
+            <span class="glyph-pill">Tutti</span>
         </div>
         <div id="glyph-grid" class="glyph-grid" aria-label="Glyph grid"></div>
     </div>
@@ -576,18 +515,21 @@ const glyphGrid = document.getElementById("glyph-grid");
 const glyphDisplay = document.getElementById("glyph-display");
 const glyphMeta = document.getElementById("glyph-meta");
 
-const baseUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const baseLower = "abcdefghijklmnopqrstuvwxyz".split("");
+const glyphLetters = [
+    ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    ..."abcdefghijklmnopqrstuvwxyz",
+    ..."ÀÁÈÉÌÍÒÓÙÚÝ",
+    ..."àáèéìíòóùúý",
+    ..."0123456789"
+];
+
 const smallCaps = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const numbers = "0123456789".split("");
-const accentsUpper = "ÀÁÈÉÌÍÒÓÙÚÝ".split("");
-const accentsLower = "àáèéìíòóùúý".split("");
 
 const glyphSymbols = [
     ..."!&'()*.·,/.:;?¿¡@#[]{}",
     ..."«»",
     ..."\\",
-    ..."-%‰…–—_`^+<=>|~≈",
+    ..."-%‰…—_`^+<=>|~≈",
     ..."\"“”’",
     ..." $£¥€"
 ];
@@ -630,54 +572,22 @@ function addGlyph(char, options = {}) {
 
 let firstCell = null;
 
-// Order: Big caps, small caps, maiuscoletto, numeri, accented letters, symbols
-function addAnchor(id) {
-    const anchor = document.createElement("div");
-    anchor.id = id;
-    anchor.className = "glyph-anchor";
-    glyphGrid.appendChild(anchor);
-}
-
-addAnchor("maiuscole");
-baseUpper.forEach((char) => {
+glyphLetters.forEach((char) => {
     const cell = addGlyph(char);
     if (!firstCell) firstCell = cell;
 });
 
-addAnchor("minuscole");
-baseLower.forEach((char) => addGlyph(char));
+glyphSymbols.forEach((char) => {
+    const cell = addGlyph(char);
+    if (!firstCell) firstCell = cell;
+});
 
-addAnchor("maiuscoletto");
-smallCaps.forEach((char) => addGlyph(char, { smallCaps: true }));
-
-addAnchor("numeri");
-numbers.forEach((char) => addGlyph(char));
-
-addAnchor("accenti");
-accentsUpper.forEach((char) => addGlyph(char));
-accentsLower.forEach((char) => addGlyph(char));
-
-addAnchor("glifi");
-glyphSymbols.forEach((char) => addGlyph(char));
+smallCaps.forEach((char) => {
+    const cell = addGlyph(char, { smallCaps: true });
+    if (!firstCell) firstCell = cell;
+});
 
 if (firstCell) showGlyph(firstCell.textContent, firstCell, true);
-
-// Scroll buttons to sections
-const glyphContainer = document.querySelector(".glyph-right");
-
-document.querySelectorAll(".glyph-pill[data-target]").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-target");
-        const anchor = document.getElementById(id);
-        if (anchor && glyphContainer) {
-            const topOffset = 70; // keep first glyph box clear of sticky buttons
-            const containerRect = glyphContainer.getBoundingClientRect();
-            const anchorRect = anchor.getBoundingClientRect();
-            const target = glyphContainer.scrollTop + (anchorRect.top - containerRect.top) - topOffset;
-            glyphContainer.scrollTo({ top: Math.max(target, 0), behavior: "smooth" });
-        }
-    });
-});
 </script>
 
 </body>
