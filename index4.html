@@ -43,7 +43,7 @@ body {
     gap: 0.5em;
     color: #2d7732; /* 标题颜色 */
     /* 移除了 mix-blend-mode 以保证颜色纯正 */
-}
+} 
 #title span {
     display: inline-block;
     opacity: 0;
@@ -102,21 +102,24 @@ body {
     background-size: 100% auto;
     background-position: center top -1000px; /* 根据实际偏移调整 */
 }
-
-
 .image {
-    align-self: stretch; /* 修改这里：从 start 改为 stretch，让容器填满格子 */
-    transition: filter 0.5s ease; 
-    /* 新增以下两行 */
-    height: 100%;       /* 强制容器高度等于网格跨度的高度 */
-    overflow: hidden;   /* 确保超出部分被裁切，不撑开网格 */
+    /* 必须：让容器填满网格定义的 span 区域 */
+    width: 100%;
+    
+    /* 必须：防止图片撑开网格，溢出部分直接切掉 */
+    overflow: hidden; 
+    
+    /* 建议：去掉 align-self: start，改用 stretch */
+    align-self: stretch; 
 }
 
 .image img {
+    /* 必须：让图片填满上面那个被 span 定义好的容器 */
     width: 100%;
-    height: 100%; 
-    object-fit: cover;  /* 此时 cover 才会真正起作用，根据容器比例进行裁切 */
-    display: block;
+    height: 100%;
+    
+    /* 灵魂：保证图片不拉伸，自动根据容器比例（横/纵/方）进行智能裁切 */
+    object-fit: cover; 
 }
 
 /* ======================
@@ -151,9 +154,9 @@ body {
 </div>
 
 <div id="content">
-    <div class="image"><img src="image/ff1.png"></div>
     <div class="image"><img src="image/f3.png"></div>
     <div class="image"><img src="image/f4.png"></div>
+    <div class="image"><img src="image/ff8.png"></div>
     <div class="image"><img src="image/f6.png"></div>
     <div class="image"><img src="image/f7.png"></div>
     <div class="image"><img src="image/ff2.png"></div>
@@ -162,7 +165,7 @@ body {
     <div class="image"><img src="image/f13.png"></div>
     <div class="image"><img src="image/f17.png"></div>
     <div class="image"><img src="image/f18.png"></div>
-    <div class="image"><img src="image/ff8.png"></div>
+    <div class="image"><img src="image/ff1.png"></div>
 </div>
 
 <script>
