@@ -5,9 +5,6 @@
 <title>Organismo Tipografico - Minimalist Grid</title>
 
 <style>
-/* ======================
-    引入自定义字体
-====================== */
 @font-face {
     font-family: 'G15Font';
     src: url('Cell-2901.ttf') format('truetype');
@@ -86,9 +83,7 @@ body {
     background-size: 100% auto;
     background-position: top center;
 }
-/* ======================
-    IMAGE HOVER LOGIC 
-====================== */
+
 .image {
     width: 100%;
     align-self: stretch; 
@@ -123,9 +118,6 @@ body {
 .image:hover img.img-front { opacity: 0; }
 .image:hover img.img-back { opacity: 1; }
 
-/* ======================
-    LAYOUT LOGIC
-====================== */
 .image:nth-child(1) { grid-column: 1 / span 4; grid-row: 3 / span 2; } 
 .image:nth-child(2) { grid-column: 6 / span 6; grid-row: 7 / span 3; } 
 .image:nth-child(3) { grid-column: 10 / span 4; grid-row: 1 / span 2; } 
@@ -140,7 +132,7 @@ body {
 .image:nth-child(12){ grid-column: 4 / span 4; grid-row: 37 / span 2; } 
 
 /* ======================
-   TYPO NOISE ZOOM
+   TYPO NOISE ZOOM (VERSIONE ALTERNATIVA)
 ====================== */
 #typo-noise {
     height: 320vh;
@@ -158,8 +150,6 @@ body {
 #noise-container {
     position: absolute;
     inset: 0;
-    transform-origin: center center;
-    will-change: transform;
 }
 
 .noise-char {
@@ -172,14 +162,13 @@ body {
     will-change: transform;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    opacity: 0.8;
 }
 
-/* la "x" finale */
 .noise-char.x {
     font-size: 9pt;
     font-weight: 600;
 }
-
 </style>
 </head>
 
@@ -247,9 +236,6 @@ body {
     </div>
 </div>
 
-<!-- ======================
-     TYPO NOISE ZOOM SECTION
-====================== -->
 <section id="typo-noise">
     <div id="noise-wrapper">
         <div id="noise-container"></div>
@@ -257,11 +243,11 @@ body {
 </section>
 
 <script>
-
     // SE REFRESH RIPARTE DA CAPO
 if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
+window.scrollTo(0, 0);
 
 const title = document.getElementById("title");
 const textBlock = document.getElementById("text-block");
@@ -283,18 +269,15 @@ title.addEventListener("click", () => {
 });
 
 /* ======================
-   TYPO NOISE ZOOM LOGIC
+   TYPO NOISE ZOOM LOGIC (VERSIONE CORRETTA)
 ====================== */
 document.addEventListener("DOMContentLoaded", () => {
 
     const noiseContainer = document.getElementById("noise-container");
-
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const NOISE_COUNT = 420;
 
-    let xChar = null; // la x finale
-
-    /* genera rumore */
+    // crea rumore
     for (let i = 0; i < NOISE_COUNT; i++) {
         const span = document.createElement("span");
         span.className = "noise-char";
@@ -303,15 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
         span.style.top = Math.random() * 100 + "%";
         noiseContainer.appendChild(span);
     }
-
-    /* aggiungi una x minuscola, sempre presente */
-    xChar = document.createElement("span");
-    xChar.className = "noise-char x";
-    xChar.textContent = "x";
-    xChar.style.left = "50%";
-    xChar.style.top = "50%";
-    xChar.style.transform = "translate(-50%, -50%) scale(1)";
-    noiseContainer.appendChild(xChar);
 
     window.addEventListener("scroll", () => {
         const section = document.getElementById("typo-noise");
@@ -322,18 +296,60 @@ document.addEventListener("DOMContentLoaded", () => {
             1
         );
 
-        /* ZOOM REALE SENZA PERDITA QUALITÀ */
-        const scale = 1 + progress * 30;
-        noiseContainer.style.transform = `scale(${scale})`;
-        noiseContainer.style.opacity = 1 - progress * 1.1;
+        // centro dello schermo
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
 
-        /* la x cresce dentro il rumore */
-        /* la x NON deve zoomare più del resto:
-   la X è già dentro noiseContainer quindi zooma insieme a tutto */
-xChar.style.opacity = 0.9 - progress * 0.2;
+        // variabili crescita
+        const maxFont = 120;  // dimensione finale della lettera centrale
+        const minFont = 9;    // dimensione iniziale
+        const range = 300;    // distanza di influenza dal centro
 
+        noiseContainer.querySelectorAll(".noise-char").forEach(char => {
+            const rect = char.getBoundingClientRect();
+            const charX = rect.left + rect.width / 2;
+            const charY = rect.top + rect.height / 2;
+
+            const dx = charX - centerX;
+            const dy = charY - centerY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            // più vicino al centro = più grande
+            const closeness = Math.max(0, 1 - dist / range);
+
+            // font size crescente solo se vicino al centro
+            const fontSize = minFont + closeness * (maxFont - minFont);
+
+            // opacità inversa alla distanza
+            const opacity = 0.05 + closeness * 0.95;
+
+            // applica solo se dentro range, altrimenti sparisce
+            char.style.fontSize = fontSize + "pt";
+            char.style.opacity = opacity;
+
+            // riduci leggermente anche il movimento (effetto "zoom")
+            char.style.transform = `translate(-50%, -50%) scale(${0.9 + closeness * 0.4})`;
+        });
+
+        // quando siamo al 100% di progress, mantieni solo la lettera centrale
+        if (progress > 0.95) {
+            noiseContainer.querySelectorAll(".noise-char").forEach(char => {
+                const rect = char.getBoundingClientRect();
+                const charX = rect.left + rect.width / 2;
+                const charY = rect.top + rect.height / 2;
+                const dx = charX - centerX;
+                const dy = charY - centerY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist > 30) {
+                    char.style.opacity = 0;
+                } else {
+                    char.style.opacity = 1;
+                    char.style.fontSize = maxFont + "pt";
+                }
+            });
+        }
     });
-
 });
 </script>
 
