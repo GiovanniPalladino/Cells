@@ -256,6 +256,52 @@
             transform: translate(-50%, 0);
         }
 
+/* ======================
+   ZOOM NOISE + X (FINE PAGINA)
+====================== */
+#zoom-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;                 /* rimane nascosto */
+  transition: opacity 0.0s;   /* NO fade */
+}
+
+#zoom-scene.active {
+  opacity: 1;                 /* diventa visibile subito */
+}
+
+#zoom-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("image/noise.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: center;
+}
+
+#zoom-x {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#zoom-x svg {
+  width: 100%;
+  height: 100%;
+}
+
+#zoom-x text {
+  font-size: 20px;
+  fill: #2d7732;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
     </style>
 </head>
 
@@ -312,6 +358,15 @@
             </svg>
         </div>
     </section>
+<!-- CAMERA ZOOM SCENE -->
+<div id="zoom-scene">
+  <div id="zoom-noise"></div>
+  <div id="zoom-x">
+    <svg viewBox="0 0 100 100">
+      <text id="zoom-letter" x="50" y="50">x</text>
+    </svg>
+  </div>
+</div>
 
 <script>
   // ============================
@@ -361,56 +416,68 @@
   });
 
 
-  // ============================
-  // ZOOM X AUTOMATICO (FINE PAGINA)
-  // ============================
-  const zoomSVG = document.getElementById("zoom-x-svg");
-  const x1 = document.getElementById("x1");
-  const greenOverlay = document.getElementById("green-overlay");
+  /* ============================
+   ZOOM NOISE + X (FINE PAGINA)
+=========================== */
+const scene = document.getElementById("zoom-scene");
+const noise = document.getElementById("zoom-noise");
+const letter = document.getElementById("zoom-letter");
 
-  let animationStarted = false;
-  let start = null;
-  const duration = 3500;
+let zooming = false;
+let start = null;
+const duration = 4000;
 
-  // 修改第一页的 animateZoom 函数
-function animateZoom(ts) {
-    if (!start) start = ts;
-    const p = Math.min((ts - start) / duration, 1);
+function zoomScene(ts) {
+  if (!start) start = ts;
+  const p = Math.min((ts - start) / duration, 1);
+  const ease = Math.pow(p, 3);
 
-    // 使用更剧烈的指数增长，让最后阶段非常快
-    const easeP = Math.pow(p, 4); 
-    const max = Math.max(window.innerWidth, window.innerHeight) * 5; // 放大倍数增加
-    const size = 10 + easeP * max;
-    
-    zoomSVG.style.width = size + "px";
-    zoomSVG.style.height = size + "px";
+  // X cresce via font-size (sempre nitida)
+  const fontSize = 20 + ease * 300;
+  letter.setAttribute("font-size", fontSize);
 
-    zoomSVG.style.position = "fixed";
-    zoomSVG.style.left = "50%";
-    zoomSVG.style.top = "50%";
-    zoomSVG.style.transform = "translate(-50%, -50%)";
+  // Noise zoom
+  const noiseScale = 1 + ease * 17;
+  noise.style.transform = `scale(${noiseScale})`;
 
-    // 当 x 几乎占满屏幕时提前跳转
-    if (p < 0.98) {
-        requestAnimationFrame(animateZoom);
-    } else {
-        // 直接跳转，不加延迟
-        window.location.href = "finalspecimen.html";
-    }
+  if (p < 0.98) {
+    requestAnimationFrame(zoomScene);
+  } else {
+    window.location.href = "finalspecimen.html";
+  }
 }
 
-  // Trigger when scroll reaches bottom
-  window.addEventListener("scroll", () => {
-    if (animationStarted) return;
+window.addEventListener("scroll", () => {
+  if (zooming) return;
 
-    const scrolled = window.scrollY + window.innerHeight;
-    const total = document.documentElement.scrollHeight;
+  const scrolled = window.scrollY + window.innerHeight;
+  const total = document.documentElement.scrollHeight;
 
-    if (scrolled >= total - 2) {
-      animationStarted = true;
-      requestAnimationFrame(animateZoom);
-    }
-  });
+  if (scrolled >= total - 2) {
+    zooming = true;
+    scene.classList.add("active");
+    requestAnimationFrame(zoomScene);
+  }
+});
+
+window.addEventListener("scroll", () => {
+  if (zooming) return;
+
+  const scrolled = window.scrollY + window.innerHeight;
+  const total = document.documentElement.scrollHeight;
+
+  if (scrolled >= total - 2) {
+    zooming = true;
+
+    // attiva la scena (senza delay)
+    scene.classList.add("active");
+
+    // avvia subito l'animazione
+    requestAnimationFrame(zoomScene);
+  }
+});
+
+
 </script>
 
 </body>
