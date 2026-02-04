@@ -61,62 +61,72 @@
       object-fit: cover;
       /* 确保视频填满屏幕 */
     }
+    
+#title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* 始终固定 X 居中，只在 Y 上居中 */
+  transform: translateX(-50%) translateY(-50%);
 
-    /* ======================
-        TITOLO & TEXT BLOCK
-        ===================== */
-    #title {
-      position: absolute;
-      left: 43%;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 1000;
-      display: flex;
-      gap: 0.5em;
-      color: #2d7732;
-    }
+  font-size: 100px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10000;
 
-    #title span {
-      display: inline-block;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.2em;
 
-    #title.visible span {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  white-space: nowrap;
+  color: #2d7732;
 
-    #title.visible span:nth-child(2) {
-      transition-delay: 0.4s;
-    }
+  /* ✅ 只动画 top / font-size / transform（不再动画 left） */
+  transition:
+    font-size 1.2s ease-in-out,
+    top 1.2s ease-in-out,
+    transform 1.2s ease-in-out;
+}
 
-    #title.fixed {
-      position: fixed;
-      top: 20px;
-      transform: none;
-      transition: top 1.2s ease;
-    }
+#title.fixed {
+  position: fixed;
+  top: 20px;
+  left: 50%; /* ✅ 不变，保证直线上升 */
 
-    #text-block {
-      position: absolute;
-      top: 100%;
-      left: 35%;
-      width: 450px;
-      opacity: 0;
-      transition: top 1.2s ease, opacity 0.8s ease;
-      color: #2d7732;
-    }
+  /* ✅ 只取消 Y 的居中，X 仍保持 -50% */
+  transform: translateX(-50%) translateY(0);
 
-    #text-block p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 1.2em;
-      text-align: left;
-    }
+  font-size: 18px;
+}
+
+#text-block{
+  /* 你原本的保持不动 */
+  position: absolute;
+  top: 100%;
+  left: 35%;
+  width: 450px;
+  opacity: 0;
+  transition: top 1.2s ease, opacity 0.8s ease;
+  color: #2d7732;
+z-index: 10000;
+  /* ✅ 加这三行 */
+  max-height: 70vh;     /* 文字最多占屏幕 70% 高 */
+  overflow-y: auto;     /* 超出的就滚动 */
+  padding-right: 6px;   /* 给滚动条留一点空间，视觉更干净 */
+}
+
+#text-block p{
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;          /* ✅ 清空默认段落间距 */
+  text-align: left;
+}
+
+#text-block .p1{ margin-bottom: 0.8em; }
+#text-block .p2{ margin-bottom: 0.8em; }
+#text-block .p3{ margin-bottom: 0; }
+
 
     /* ======================
         CONTENT GRID SYSTEM
@@ -178,8 +188,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 20vw;
-      height: 20vw;
+      width: 40vw;
+      height: 407vw;
       object-fit: contain;
       opacity: 0;
       z-index: 100;
@@ -490,7 +500,6 @@
 </head>
 
 <body>
-
   <div id="intro-container">
     <video id="intro-video" muted autoplay playsinline>
       <source src="image/video.micro.website.mp4" type="video/mp4">
@@ -502,14 +511,9 @@
   </div>
 
   <div id="text-block">
-    <p>Il nostro archivio interpreta il segno grafico attraverso la lente della biologia cellulare, elevando la
-      lettera a unità minima e vitale del linguaggio. Come la cellula rappresenta il mattone fondamentale della
-      vita, così ogni carattere racchiude in sé un codice morfologico che si evolve e si adatta nel tempo.</p>
-    <p>Attraverso questa analogia, l’archivio non si limita a catalogare forme, ma si costituisce come un vero e
-      proprio organismo linguistico, dove la storia della tipografia viene riletta come un processo di sviluppo
-      biologico e strutturale.</p>
-    <p>Adottando il rigore scientifico della biologia moderna, analizziamo l’evoluzione dei caratteri come una serie
-      di mutazioni organiche.</p>
+    <p class="p1">La cellula rappresenta l’origine della vita, così come la lettera può essere vista come l’origine del linguaggio. In entrambe riconosciamo un principio comune: la natura tende a generare e ripetere strutture essenziali, le stesse geometrie minime che ritroviamo anche nella scrittura umana. </p><p class="p2">Per questo, dove appare una lettera sembra affiorare una traccia di vita, come se segno e organismo condividessero la stessa struttura primaria.
+Attraverso questa analogia, l’archivio non si limita a catalogare forme, ma si configura come un organismo linguistico vivente, in cui la storia della tipografia viene riletta come un processo di sviluppo biologico e strutturale. Quando l’essere umano iniziò a incidere segni sulla pietra e sulla carta, tornò inconsapevolmente a quelle stesse strutture primarie: le cellule. Curve, incisioni, aperture e chiusure non nacquero dal nulla, ma da una memoria formale più antica della cultura stessa.
+    </p><p class="p3">Il carattere tipografico prende forma a partire da un corpo con grazie, una struttura iniziale solida e riconoscibile. Al suo interno si sviluppano moduli globulari, simili a cellule, che ne trasformano progressivamente l’aspetto, generando una forma ibrida che appare insieme costruita e vitale.</p>
   </div>
   <div class="bg-image-wrapper">
     <img src="image/noise.jpg" alt="bg1">
@@ -522,7 +526,7 @@
   <div id="content">
     <div class="image">
       <img src="image/f4.png" class="img-front">
-      <img src="image/www2.png" class="img-back">
+      <img src="image/1.png" class="img-back">
 
       <div class="info-overlay">
         <p>Membrana plasmatica</p>
@@ -548,7 +552,7 @@
 
     <div class="image">
       <img src="image/f9.png" class="img-front">
-      <img src="image/www1.png" class="img-back">
+      <img src="image/2.png" class="img-back">
       <div class="info-overlay tight">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -573,7 +577,7 @@
     <div class="image"><img src="image/ff8.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
     <div class="image">
       <img src="image/f6.png" class="img-front">
-      <img src="image/www9.png" class="img-back">
+      <img src="image/7.png" class="img-back">
       <div class="info-overlay loose">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -598,7 +602,7 @@
     <div class="image"><img src="image/f13.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
     <div class="image">
       <img src="image/f18.png" class="img-front">
-      <img src="image/www6.png" class="img-back">
+      <img src="image/8.png" class="img-back">
       <div class="info-overlay left">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -622,7 +626,7 @@
     </div>
     <div class="image">
       <img src="image/f3.png" class="img-front">
-      <img src="image/www4.png" class="img-back">
+      <img src="image/5.png" class="img-back">
       <div class="info-overlay bump-up-right">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -646,7 +650,7 @@
     </div>
     <div class="image">
       <img src="image/f12.png" class="img-front">
-      <img src="image/www5.png" class="img-back">
+      <img src="image/3.png" class="img-back">
       <div class="info-overlay">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -671,7 +675,7 @@
     <div class="image"><img src="image/ff2.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
     <div class="image">
       <img src="image/f17.png" class="img-front">
-      <img src="image/www8.png" class="img-back">
+      <img src="image/9.png" class="img-back">
       <div class="info-overlay bottom">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -695,7 +699,7 @@
     </div>
     <div class="image">
       <img src="image/f7.png" class="img-front">
-      <img src="image/www7.png" class="img-back">
+      <img src="image/4.png" class="img-back">
       <div class="info-overlay far-left">
         <p>Membrana plasmatica</p>
         <p>Italico</p>
@@ -753,7 +757,7 @@
       setTimeout(() => { title.classList.add("visible"); }, 300);
       setTimeout(() => {
         title.classList.add("fixed");
-        textBlock.style.top = "50%";
+   textBlock.style.top = "50%";
         textBlock.style.opacity = "1";
       }, 1800);
     }
