@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Organismo Tipografico - Minimalist Grid</title>
+
+  <style>
+    /* ======================
+        引入自定义字体
+        ====================== */
+    @font-face {
+      font-family: 'G15Font';
+      src: url('Cell-2901.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'G15Font', Arial, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      background-color: #f3fcf4;
+      color: #2d7732;
+    }
+
+    /* ======================
+           开场视频样式 (NEW)
+        ====================== */
+    #intro-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f3fcf4;
+      /* 与背景色一致，过渡更自然 */
+      z-index: 99999;
+      /* 确保在最上层 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1s ease;
+      /* 淡出动画时长 */
+    }
+
+    #intro-container.hidden {
+      opacity: 0;
+      pointer-events: none;
+      /* 隐藏后不阻挡鼠标操作 */
+    }
+
+    #intro-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* 确保视频填满屏幕 */
+    }
+
+    /* ======================
+        TITOLO & TEXT BLOCK
+        ===================== */
+    #title {
+      position: absolute;
+      left: 43%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      gap: 0.5em;
+      color: #2d7732;
+    }
+
+    #title span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    #title.visible span {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #title.visible span:nth-child(2) {
+      transition-delay: 0.4s;
+    }
+
+    #title.fixed {
+      position: fixed;
+      top: 20px;
+      transform: none;
+      transition: top 1.2s ease;
+    }
+
+    #text-block {
+      position: absolute;
+      top: 100%;
+      left: 35%;
+      width: 450px;
+      opacity: 0;
+      transition: top 1.2s ease, opacity 0.8s ease;
+      color: #2d7732;
+    }
+
+    #text-block p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 1.2em;
+      text-align: left;
+    }
+
+    /* ======================
+        CONTENT GRID SYSTEM
+        ====================== */
+    #content {
+      margin-top: 110vh;
+      padding: 100px 18%;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 80px;
+      gap: 32px;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bg-image-wrapper {
+      position: absolute;
+      top: 110vh;
+      left: 0;
+      width: 100%;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bg-image-wrapper img {
+      width: 2000px;
+      display: block;
+      height: auto;
+    }
+
+    /* IMAGE HOVER LOGIC */
+    .image {
+      width: 100%;
+      align-self: stretch;
+      position: relative;
+      overflow: visible;
+    }
+
+    /* disable hover/click for items without a back image */
+    .image:not(.has-back) {
+      pointer-events: none;
+    }
+
+    .image img {
+      display: block;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .image img.img-front {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image img.img-back {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20vw;
+      height: 20vw;
+      object-fit: contain;
+      opacity: 0;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* hover swap only when a back image exists */
+    .image.has-back:hover img.img-front {
+      opacity: 0;
+    }
+
+    .image.has-back:hover img.img-back {
+      opacity: 1;
+    }
+
+    /* Grid Items Positioning */
+    .image:nth-child(1) {
+      grid-column: 1 / span 4;
+      grid-row: 3 / span 2;
+    }
+
+    .image:nth-child(2) {
+      grid-column: 6 / span 6;
+      grid-row: 6 / span 3;
+    }
+
+    .image:nth-child(3) {
+      grid-column: 10 / span 4;
+      grid-row: 1 / span 2;
+    }
+
+    .image:nth-child(4) {
+      grid-column: 2 / span 4;
+      grid-row: 12 / span 4;
+    }
+
+    .image:nth-child(5) {
+      grid-column: 10 / span 3;
+      grid-row: 11 / span 2;
+    }
+
+    .image:nth-child(6) {
+      grid-column: 8 / span 9;
+      grid-row: 16 / span 3;
+    }
+
+    .image:nth-child(7) {
+      grid-column: 1 / span 3;
+      grid-row: 20 / span 2;
+    }
+
+    .image:nth-child(8) {
+      grid-column: 6 / span 4;
+      grid-row: 22 / span 4;
+    }
+
+    .image:nth-child(9) {
+      grid-column: 1 / span 6;
+      grid-row: 29 / span 4;
+    }
+
+    .image:nth-child(10) {
+      grid-column: 11 / span 5;
+      grid-row: 27 / span 3;
+    }
+
+    .image:nth-child(11) {
+      grid-column: 10 / span 3;
+      grid-row: 33 / span 2;
+    }
+
+    .image:nth-child(12) {
+      grid-column: 4 / span 4;
+      grid-row: 36 / span 3;
+    }
+
+    .grid-spacer {
+      grid-column: 1 / -1;
+      grid-row: 39 / span 6;
+      pointer-events: none;
+    }
+
+    /* ======================
+        X ZOOM SECTION
+        ====================== */
+    #typo-noise {
+      height: 100vh;
+      background: #f3fcf4;
+      position: relative;
+      z-index: 10;
+      margin-top: 150px;
+    }
+
+    #noise-container {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 0vh;
+    }
+
+    #zoom-x-svg text {
+      font-family: 'G15Font', sans-serif;
+      fill: #2d7732;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      transition: opacity 0.05s ease;
+    }
+
+    /* Fullscreen green overlay */
+    #green-overlay {
+      position: fixed;
+      inset: 0;
+      background: #2d7732;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 9999;
+    }
+
+    #zoom-x-svg {
+      width: 6px;
+      height: 6px;
+      will-change: width, height, transform;
+      transform-origin: center center;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      /* will be updated by JS */
+      transform: translate(-50%, 0);
+    }
+
+    /* ======================
+   ZOOM NOISE + X (FINE PAGINA)
+====================== */
+    #zoom-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      pointer-events: none;
+      opacity: 0;
+      /* rimane nascosto */
+      transition: opacity 0.0s;
+      /* NO fade */
+    }
+
+    #zoom-scene.active {
+      opacity: 1;
+      /* diventa visibile subito */
+    }
+
+    #zoom-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("image/noise.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      transform-origin: center;
+    }
+
+    #zoom-x {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #zoom-x svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    #zoom-x text {
+
+      fill: #2d7732;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .info-overlay {
+      position: absolute;
+      bottom: 105%;
+      left: 0;
+
+      width: 38vw;
+      max-width: none;
+
+      background: #f3fcf4;
+      color: #2d7732;
+      font-size: 16px;
+      line-height: 1.6;
+
+      padding: 14px 16px;
+      border: none;
+
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+
+      z-index: 300;
+
+      display: grid;
+      grid-template-columns: max-content max-content;
+      column-gap: 12px;
+      /* tight gap between col 1 and 2 */
+      text-align: left;
+    }
+
+    .info-overlay p {
+      margin-bottom: 6px;
+      text-align: left;
+      /* default for cols 2 & 3 */
+      break-inside: avoid;
+    }
+
+    .info-overlay p:nth-child(2n+1) {
+      text-align: right;
+    }
+
+    /* first column */
+
+    .image.active .info-overlay {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .info-overlay p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="intro-container">
+    <video id="intro-video" muted autoplay playsinline>
+      <source src="image/video.micro.website.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div id="title">
+    <span>Organismo</span>
+    <span>Tipografico</span>
+  </div>
+
+  <div id="text-block">
+    <p>Il nostro archivio interpreta il segno grafico attraverso la lente della biologia cellulare, elevando la
+      lettera a unità minima e vitale del linguaggio. Come la cellula rappresenta il mattone fondamentale della
+      vita, così ogni carattere racchiude in sé un codice morfologico che si evolve e si adatta nel tempo.</p>
+    <p>Attraverso questa analogia, l’archivio non si limita a catalogare forme, ma si costituisce come un vero e
+      proprio organismo linguistico, dove la storia della tipografia viene riletta come un processo di sviluppo
+      biologico e strutturale.</p>
+    <p>Adottando il rigore scientifico della biologia moderna, analizziamo l’evoluzione dei caratteri come una serie
+      di mutazioni organiche.</p>
+  </div>
+  <div class="bg-image-wrapper">
+    <img src="image/noise.jpg" alt="bg1">
+    <img src="image/111.jpg" alt="bg2">
+    <img src="image/222.jpg" alt="bg3">
+    <img src="image/333.jpg" alt="bg4">
+
+  </div>
+
+  <div id="content">
+    <div class="image">
+      <img src="image/f4.png" class="img-front">
+      <img src="image/www2.png" class="img-back">
+
+      <div class="info-overlay">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p> 
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
+
+    <div class="image"><img src="image/f9.png" class="img-front"><img src="image/www1.png" class="img-back"></div>
+    <div class="image"><img src="image/ff8.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
+    <div class="image"><img src="image/f6.png" class="img-front"><img src="image/www9.png" class="img-back"></div>
+    <div class="image"><img src="image/f13.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
+    <div class="image"><img src="image/f18.png" class="img-front"><img src="image/www6.png" class="img-back"></div>
+    <div class="image"><img src="image/f3.png" class="img-front"><img src="image/www4.png" class="img-back"></div>
+    <div class="image"><img src="image/f12.png" class="img-front"><img src="image/www5.png" class="img-back"></div>
+    <div class="image"><img src="image/ff2.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
+    <div class="image"><img src="image/f17.png" class="img-front"><img src="image/www8.png" class="img-back"></div>
+    <div class="image"><img src="image/f7.png" class="img-front"><img src="image/www7.png" class="img-back"></div>
+    <div class="image"><img src="image/ff1.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
+    <div class="grid-spacer"></div>
+  </div>
+
+  <!-- CAMERA ZOOM SCENE -->
+  <div id="zoom-scene">
+    <div id="zoom-noise"></div>
+    <div id="zoom-x">
+      <svg viewBox="0 0 100 100">
+        <text id="zoom-letter" x="50" y="50">x</text>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // ============================
+    // RESET SCROLL (optional)
+    // ============================
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // ============================
+    // 视频逻辑 & 原始动画触发
+    // ============================
+    const title = document.getElementById("title");
+    const textBlock = document.getElementById("text-block");
+    const introContainer = document.getElementById("intro-container");
+    const introVideo = document.getElementById("intro-video");
+
+    // 将原始的 window.load 逻辑封装成一个函数
+    function startSiteAnimations() {
+      setTimeout(() => { title.classList.add("visible"); }, 300);
+      setTimeout(() => {
+        title.classList.add("fixed");
+        textBlock.style.top = "50%";
+        textBlock.style.opacity = "1";
+      }, 1800);
+    }
+
+    // 监听视频结束事件
+    if (introVideo) {
+      introVideo.addEventListener('ended', () => {
+        // 1. 淡出视频容器
+        introContainer.classList.add('hidden');
+
+        // 2. 等待淡出动画完成后，销毁视频（节省资源）并开始网页动画
+        setTimeout(() => {
+          introContainer.style.display = 'none'; // 彻底移除布局
+          startSiteAnimations(); // 触发原来的文字动画
+        }, 1000); // 这里的时间要和 CSS transition 时间匹配 (1s = 1000ms)
+      });
+    } else {
+      // 如果找不到视频（比如代码写错了），直接开始动画作为保险
+      window.addEventListener('load', startSiteAnimations);
+    }
+
+    title.addEventListener("click", () => {
+      textBlock.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+
+    /* ============================
+     ZOOM NOISE + X (FINE PAGINA)
+  =========================== */
+    const scene = document.getElementById("zoom-scene");
+    const noise = document.getElementById("zoom-noise");
+    const letter = document.getElementById("zoom-letter");
+
+    let zooming = false;
+    let start = null;
+    const duration = 2500;
+
+  function zoomScene(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      
+      // 使用 easeOut 曲线
+      const ease = 1 - Math.pow(1 - p, 3);
+
+      // --- 关键修改：控制 SVG 容器的大小而非字号 ---
+      const svgElement = letter.closest('svg');
+      
+      // 设置初始宽度为 5% 屏幕宽，最终宽度为 50% 屏幕宽 (你可以调这个 50 来看大小)
+      // 50vw 意味着 'x' 的外框永远只占屏幕一半，绝对不会出界
+      const startWidth = 5; 
+      const finalWidth = 60; 
+      const currentWidth = startWidth + (ease * (finalWidth - startWidth));
+      
+      svgElement.style.width = `${currentWidth}vw`;
+      svgElement.style.height = `${currentWidth}vw`;
+
+      // 确保字号在 SVG 内部是撑满的
+      letter.style.fontSize = "90px"; 
+
+      // Noise 缩放保持
+      const noiseScale = 1 + ease * 10;
+      noise.style.transform = `scale(${noiseScale})`;
+
+      if (p < 0.99) {
+        requestAnimationFrame(zoomScene);
+      } else {
+        setTimeout(() => {
+          window.location.href = "finalspecimen copy.html";
+        }, 500); // 稍微停半秒，展示完整的 X
+      }
+    }
+
+    window.addEventListener("scroll", () => {
+      if (zooming) return;
+
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+
+      if (scrolled >= total - 2) {
+        zooming = true;
+        scene.classList.add("active");
+        requestAnimationFrame(zoomScene);
+      }
+    });
+
+    window.addEventListener("scroll", () => {
+      if (zooming) return;
+
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+
+      if (scrolled >= total - 2) {
+        zooming = true;
+
+        // attiva la scena (senza delay)
+        scene.classList.add("active");
+
+        // avvia subito l'animazione
+        requestAnimationFrame(zoomScene);
+      }
+    });
+
+    document.querySelectorAll(".image").forEach(img => {
+      const overlay = img.querySelector(".info-overlay");
+
+      img.addEventListener("click", e => {
+        e.stopPropagation();
+        // close other open overlays
+        document.querySelectorAll(".image.active").forEach(other => {
+          if (other !== img) other.classList.remove("active");
+        });
+        img.classList.add("active");
+      });
+
+      // hide the overlay as soon as the pointer leaves it
+      if (overlay) {
+        overlay.addEventListener("mouseleave", () => {
+          img.classList.remove("active");
+        });
+      }
+
+      // auto-hide when leaving the letter area (unless moving inside its overlay)
+      img.addEventListener("mouseleave", evt => {
+        if (!img.contains(evt.relatedTarget)) {
+          img.classList.remove("active");
+        }
+      });
+
+      // mark images that actually have a hover-back image
+      const back = img.querySelector(".img-back");
+      if (back && back.getAttribute("src") && back.getAttribute("src").trim() !== "") {
+        img.classList.add("has-back");
+        // if the back image fails to load, disable hover for this item
+        back.addEventListener("error", () => {
+          img.classList.remove("has-back");
+          img.style.pointerEvents = "none";
+        });
+      } else {
+        img.style.pointerEvents = "none";
+      }
+    });
+
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".image.active")
+        .forEach(el => el.classList.remove("active"));
+    });
+
+  </script>
+</body>
+
+</html>
