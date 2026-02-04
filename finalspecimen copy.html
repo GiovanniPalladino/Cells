@@ -44,22 +44,23 @@
             position: relative;
             touch-action: none;
         }
-#fixed-header {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 18px;
-  color: var(--primary-green);
-  z-index: 9999;
-  
-  /* 添加这两行 */
-  opacity: 0; 
-  pointer-events: none; 
 
-  cursor: pointer;
-  letter-spacing: 0.05em;
-}
+        #fixed-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: var(--primary-green);
+            z-index: 9999;
+
+            /* 添加这两行 */
+            opacity: 0;
+            pointer-events: none;
+
+            cursor: pointer;
+            letter-spacing: 0.05em;
+        }
 
         /* 修改这一段 */
         #main-wrapper::before {
@@ -72,8 +73,9 @@
             background-size: cover;
             /* 关键修改：初始透明度设为 0，并关联一个 CSS 变量 */
             opacity: var(--noise-opacity, 0);
-         pointer-events: auto;
-cursor: pointer; /* 可选：让它看起来可点 */
+            pointer-events: auto;
+            cursor: pointer;
+            /* 可选：让它看起来可点 */
 
             z-index: 0;
         }
@@ -88,7 +90,9 @@ cursor: pointer; /* 可选：让它看起来可点 */
             z-index: 3;
             /* 让大 X 在噪点上面（想在下面就改成 1） */
         }
-
+#editableText::placeholder {
+  color: rgba(45, 119, 50, 1); /* 主绿色 + 更淡 */
+}
 
         .custom-border {
             border: 1px solid rgba(45, 119, 50, 1);
@@ -245,27 +249,32 @@ cursor: pointer; /* 可选：让它看起来可点 */
             transform-origin: top left;
             /* importantissimo per lo zoom pulito */
         }
+
         /* nasconde scrollbar ma mantiene lo scroll */
-.custom-scrollbar {
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE / Edge */
-}
+        .custom-scrollbar {
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE / Edge */
+        }
 
-.custom-scrollbar::-webkit-scrollbar {
-  display: none;              /* Chrome / Safari */
-}
-#intro-x{
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 30px;
-  line-height: 1;
-  color: var(--primary-green);
-  z-index: 99998;  /* sotto header, sopra tutto */
-  pointer-events: none;
-}
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+            /* Chrome / Safari */
+        }
 
+        #intro-x {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            line-height: 1;
+            color: var(--primary-green);
+            z-index: 99998;
+            /* sotto header, sopra tutto */
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -298,12 +307,14 @@ cursor: pointer; /* 可选：让它看起来可点 */
 
             <section id="section-2" class="h-screen w-screen px-20 pt-8 pb-4 overflow-hidden relative">
 
-                <div
-                    class="absolute top-[90px] left-[50%] w-[40%] h-[calc(100vh-160px)] custom-border  bg-white/5 z-[10]">
+                <div class="absolute bottom-[70px] top-[200px] left-[50%] w-[40%]  z-[10]">
 
-                    <textarea id="editableText" spellcheck="false"
-                        class="w-full h-full bg-transparent border-none outline-none resize-none text-[80px] leading-[1.1] placeholder:opacity-20 custom-scrollbar"
-                        placeholder="(type the text here)">Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font </textarea>
+                    <textarea id="editableText" spellcheck="false" class="w-full h-full
+         bg-transparent border-none outline-none resize-none
+         text-[56px] leading-[1.3]
+         custom-scrollbar
+         px-8 py-6" placeholder="(type the text here)">
+Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. </textarea>
                 </div>
 
                 <div
@@ -369,15 +380,12 @@ cursor: pointer; /* 可选：让它看起来可点 */
                             </div>
                         </div>
                     </div>
-
                     <div class="h-[90%] flex-1 flex flex-col justify-end items-start">
-                    <div class="w-96 aspect-square flex ml-[30px] items-end justify-center pb-8 bg-transparent rounded-full overflow-hidden">
-
-<span id="focus-char" class="text-[300px] leading-none text-[#2D7732] translate-y-6">a</span>
-
-                        </div>
-
+                        <span id="focus-char"
+                            class="text-[300px] leading-none text-[#2D7732] ml-[30px] pb-8 translate-y-6"
+                            style="display:inline-block;">a</span>
                     </div>
+
                 </div>
             </section>
 
@@ -399,10 +407,10 @@ cursor: pointer; /* 可选：让它看起来可点 */
         const lhSlider = document.getElementById('lhSlider');
         const lhVal = document.getElementById('lhVal');
         const scrollDots = document.querySelectorAll('.scroll-dot');
-const fixedHeader = document.getElementById('fixed-header');
-fixedHeader.addEventListener('click', () => {
-  window.location.href = '1 copy.html';
-});
+        const fixedHeader = document.getElementById('fixed-header');
+        fixedHeader.addEventListener('click', () => {
+            window.location.href = '1 copy.html';
+        });
 
         let currentSection = 1;
         let isScrolling = false;
@@ -477,85 +485,62 @@ fixedHeader.addEventListener('click', () => {
         window.addEventListener('load', () => {
             const mainWrapper = document.getElementById('main-wrapper');
             // 1. 初始状态：让 canvas 里的 sections 彻底透明，但 canvas 容器和中心 X 保持可见
-      gsap.set("section", { opacity: 0 }); 
-    // 设置 CSS 变量，让背景 noise 初始不可见
-    gsap.set(mainWrapper, { "--noise-opacity": 0 }); 
+            gsap.set("section", { opacity: 0 });
+            // 设置 CSS 变量，让背景 noise 初始不可见
+            gsap.set(mainWrapper, { "--noise-opacity": 0 });
 
-gsap.set(centerX, { opacity: 0 });  // IMPORTANT: la X grande resta dov’è, solo invisibile
+            gsap.set(centerX, { opacity: 0 });  // IMPORTANT: la X grande resta dov’è, solo invisibile
 
-    gsap.set(canvas, { 
-        opacity: 1, 
-        scale: 0.5, 
-        x: "0%", 
-        y: "0%" 
-    });
-    gsap.set(centerX, { opacity: 1 });
+            gsap.set(canvas, {
+                opacity: 1,
+                scale: 0.5,
+                x: "0%",
+                y: "0%"
+            });
+            gsap.set(centerX, { opacity: 1 });
 
-    gsap.set(centerX, { fontSize: "600px" });
+            gsap.set(centerX, { fontSize: "600px" });
 
-    gsap.set(centerX, {
-  position: "fixed",
-  top: "32%",
-  left: "50%",
-  xPercent: -50,
-  yPercent: -50
-});
-
-
-
-    const tl = gsap.timeline({ 
-        defaults: { ease: "power2.inOut" },
-        onComplete: () => {
-            introDone = true; 
-        }
-    });
-
-    // --- 动画序列 ---
-    tl.to({}, { duration: 1 })
-  .to(centerX, {
-    fontSize: "300vh",
-    duration: 0.6,
-    ease: "power2.inOut"
-  })
-  .to(["section", mainWrapper], {
-    opacity: 1,
-    "--noise-opacity": 0.3,
-    duration: 1.2,
-    stagger: 0.1
-  })
-  .to({}, { duration: 0.5 })
-  .to(canvas, {
-    scale: 1,
-    duration: 1.1,
-    ease: "power3.inOut"
-  })
-  /* 🚩 在这里添加下面这行代码 */
-  .to("#fixed-header", { opacity: 1, pointerEvents: "auto", duration: 0.5 });
-    
-    // 1 secondo: solo X piccola
-tl.to({}, { duration: 1 })
-
-.to(centerX, {
-  fontSize: "300vh",
-  duration: 0.6,
-  ease: "power2.inOut"
-})
+            gsap.set(centerX, {
+                position: "fixed",
+                top: "32%",
+                left: "50%",
+                xPercent: -50,
+                yPercent: -50
+            });
 
 
 
-  // poi continua tutto come già hai
-  .to(["section", mainWrapper], {
-    opacity: 1,
-    "--noise-opacity": 0.3,
-    duration: 1.2,
-    stagger: 0.1
-  })
-  .to({}, { duration: 0.5 })
-  .to(canvas, {
-    scale: 1,
-    duration: 1.1,
-    ease: "power3.inOut"
-  });
+            const tl = gsap.timeline({
+                defaults: { ease: "power2.inOut" },
+                onComplete: () => {
+                    introDone = true;
+                }
+            });
+
+            // --- 动画序列 ---
+            tl.to({}, { duration: 1 })
+                .to(centerX, {
+                    fontSize: "300vh",
+                    duration: 0.6,
+                    ease: "power2.inOut"
+                })
+                .to(["section", mainWrapper], {
+                    opacity: 1,
+                    "--noise-opacity": 0.3,
+                    duration: 1.2,
+                    stagger: 0.1
+                })
+                .to({}, { duration: 0.5 })
+                .to(canvas, {
+                    scale: 1,
+                    duration: 1.1,
+                    ease: "power3.inOut",
+                    onComplete: () => { introDone = true; }
+                })
+                /* 🚩 在这里添加下面这行代码 */
+                .to("#fixed-header", { opacity: 1, pointerEvents: "auto", duration: 0.5 });
+
 
 
             // --- 交互控制 (保持不变) ---
@@ -605,6 +590,14 @@ tl.to({}, { duration: 1 })
             // 如果你希望输入时大 X 也变，取消下一行的注释
             // centerX.innerText = val.length > 0 ? val[val.length - 1] : "x";
         });
+let isFirstInput = true;
+
+editableText.addEventListener("input", () => {
+  if (isFirstInput) {
+    editableText.value = "";
+    isFirstInput = false;
+  }
+});
 
         // 字体大小滑块控制
         sizeSlider.addEventListener('input', (e) => {
