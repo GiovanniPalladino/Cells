@@ -364,38 +364,42 @@
       dominant-baseline: middle;
     }
 
-    .info-overlay {
-      position: absolute;
-      bottom: 105%;
-      left: 0;
+.info-overlay {
+  position: absolute;
+  top: 60%;                 /* push box lower to avoid touching images */
+  left: 105%;               /* keep it to the right of the letter */
 
-      width: 38vw;
-      max-width: none;
+  width: 26vw;
+  max-width: none;
 
-      background: #f3fcf4;
-      color: #2d7732;
-      font-size: 16px;
-      line-height: 1.6;
+  background: #f3fcf4;
+  color: #2d7732;
+  font-size: 16px;
+  line-height: 1.4;
 
-      padding: 14px 16px;
-      border: none;
+  padding: 10px 12px;
+  border: 1px solid #2d7732; /* subtle outline */
 
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(10px, -50%); /* slide in from the right, centered */
+  transition: opacity 0.3s ease, transform 0.3s ease;
 
-      z-index: 300;
+  z-index: 300;
 
-      display: grid;
-      grid-template-columns: max-content max-content;
-      column-gap: 12px;
-      /* tight gap between col 1 and 2 */
-      text-align: left;
-    }
+  display: grid;
+  grid-template-columns: max-content max-content; /* two columns */
+  grid-auto-flow: row;                             /* fill down then across */
+  grid-auto-rows: auto;
+  column-gap: 14px;
+  row-gap: 6px;
+  justify-content: center;   /* center the grid horizontally */
+  align-content: center;     /* center vertically inside box */
+  text-align: left;
+}
 
     .info-overlay p {
-      margin-bottom: 6px;
+      margin-bottom: 0;
       text-align: left;
       /* default for cols 2 & 3 */
       break-inside: avoid;
@@ -407,11 +411,69 @@
 
     /* first column */
 
-    .image.active .info-overlay {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
+.image.active .info-overlay {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+}
+
+/* mirror placement to the left side */
+.info-overlay.left {
+  left: auto;
+  right: 105%;
+  transform: translate(-10px, -50%);
+}
+.image.active .info-overlay.left {
+  transform: translate(0, -50%);
+}
+
+/* further-left variant for crowded spots */
+.info-overlay.far-left {
+  left: auto;
+  right: 125%;
+  transform: translate(-16px, -50%);
+}
+.image.active .info-overlay.far-left {
+  transform: translate(0, -50%);
+}
+
+/* variant to tuck box closer to the image */
+.info-overlay.tight {
+  left: 100%;
+  transform: translate(2px, -50%); /* nudge closer to the image */
+}
+.image.active .info-overlay.tight {
+  transform: translate(0, -50%);
+}
+
+/* variant to push box further from the image */
+.info-overlay.loose {
+  left: 112%;
+  transform: translate(12px, -50%);
+}
+.image.active .info-overlay.loose {
+  transform: translate(0, -50%);
+}
+
+/* variant to move box up and further right */
+.info-overlay.bump-up-right {
+  top: 44%;      /* raise higher */
+  left: 130%;    /* push further right */
+  transform: translate(20px, -50%);
+}
+.image.active .info-overlay.bump-up-right {
+  transform: translate(0, -50%);
+}
+
+/* variant to show box beneath the image, centered */
+.info-overlay.bottom {
+  top: 115%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.image.active .info-overlay.bottom {
+  transform: translate(-50%, 0);
+}
 
     .info-overlay p:last-child {
       margin-bottom: 0;
@@ -476,16 +538,177 @@
       </div>
     </div>
 
-    <div class="image"><img src="image/f9.png" class="img-front"><img src="image/www1.png" class="img-back"></div>
+    <div class="image">
+      <img src="image/f9.png" class="img-front">
+      <img src="image/www1.png" class="img-back">
+      <div class="info-overlay tight">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
     <div class="image"><img src="image/ff8.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
-    <div class="image"><img src="image/f6.png" class="img-front"><img src="image/www9.png" class="img-back"></div>
+    <div class="image">
+      <img src="image/f6.png" class="img-front">
+      <img src="image/www9.png" class="img-back">
+      <div class="info-overlay loose">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
     <div class="image"><img src="image/f13.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
-    <div class="image"><img src="image/f18.png" class="img-front"><img src="image/www6.png" class="img-back"></div>
-    <div class="image"><img src="image/f3.png" class="img-front"><img src="image/www4.png" class="img-back"></div>
-    <div class="image"><img src="image/f12.png" class="img-front"><img src="image/www5.png" class="img-back"></div>
+    <div class="image">
+      <img src="image/f18.png" class="img-front">
+      <img src="image/www6.png" class="img-back">
+      <div class="info-overlay left">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
+    <div class="image">
+      <img src="image/f3.png" class="img-front">
+      <img src="image/www4.png" class="img-back">
+      <div class="info-overlay bump-up-right">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
+    <div class="image">
+      <img src="image/f12.png" class="img-front">
+      <img src="image/www5.png" class="img-back">
+      <div class="info-overlay">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
     <div class="image"><img src="image/ff2.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
-    <div class="image"><img src="image/f17.png" class="img-front"><img src="image/www8.png" class="img-back"></div>
-    <div class="image"><img src="image/f7.png" class="img-front"><img src="image/www7.png" class="img-back"></div>
+    <div class="image">
+      <img src="image/f17.png" class="img-front">
+      <img src="image/www8.png" class="img-back">
+      <div class="info-overlay bottom">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
+    <div class="image">
+      <img src="image/f7.png" class="img-front">
+      <img src="image/www7.png" class="img-back">
+      <div class="info-overlay far-left">
+        <p>Membrana plasmatica</p>
+        <p>Italico</p>
+        <p>Filamenti</p>
+        <p>Sans-serif</p>
+        <p>Parete cellulare</p>
+        <p>Semi-bold</p>
+        <p>Volume cellulare</p>
+        <p>-</p>
+        <p>Polarità</p>
+        <p>Normale</p>
+        <p>Gradiente di concentrazione</p>
+        <p>Minima</p>
+        <p>Corpo cellulare</p>
+        <p>Alto</p>
+        <p>Pori della membrana</p>
+        <p>-</p>
+        <p>Funzione della cellula</p>
+        <p>Generosa</p>
+      </div>
+    </div>
     <div class="image"><img src="image/ff1.png" class="img-front"><img src="image/www0.png" class="img-back"></div>
     <div class="grid-spacer"></div>
   </div>
