@@ -307,12 +307,13 @@
   bottom: 105%;
   left: 0;
 
-  max-width: 420px;
+  width: 38vw;
+  max-width: none;
+
   background: #f3fcf4;
   color: #2d7732;
-
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.6;
 
   padding: 14px 16px;
   border: 1px solid #2d7732;
@@ -322,11 +323,21 @@
   transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 
-  z-index: 200;
+  z-index: 300;
 
-  /* ✦ TRE COLONNE ✦ */
-  column-count: 3;
-  column-gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 15px;
+
+  text-align: left; /* CENTRO DEL BOX */
+}
+.info-overlay p {
+  margin-bottom: 4px;
+}
+
+/* prima colonna */
+.info-overlay p:nth-child(-n+9) {
+  text-align: right;
 }
 
 .image.active .info-overlay {
@@ -415,6 +426,7 @@
     <p>Italico</p>
     <p>Sans-serif</p>
     <p>Semi-bold</p>
+    <p>-</p>
     <p>Normale</p>
     <p>Minima</p>
     <p>Alto</p>
