@@ -10,10 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
-    #vibe-canvas {
-  transform-origin: top left;
-       opacity: 0;
-}
+        #vibe-canvas {
+            transform-origin: top left;
+            opacity: 0;
+        }
 
 
 
@@ -47,7 +47,7 @@
             touch-action: none;
         }
 
-        /* ===== 背景图：整张放在整个画布上（不 repeat） ===== */
+        /* 修改这一段 */
         #main-wrapper::before {
             content: "";
             position: absolute;
@@ -56,12 +56,10 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            /* 关键：铺满整个屏幕（会裁一点边） */
-            opacity: 0.3;
-            /* 先设 1，确保你能看到 */
+            /* 关键修改：初始透明度设为 0，并关联一个 CSS 变量 */
+            opacity: var(--noise-opacity, 0);
             pointer-events: none;
             z-index: 0;
-            /* 放在最底层 */
         }
 
         /* 让你的内容在背景图上面 */
@@ -431,65 +429,73 @@
             }
         }
 
-      let introDone = false;
+        let introDone = false;
 
-window.addEventListener('load', () => {
-  document.getElementById('vibe-canvas').style.opacity = "1";
+        window.addEventListener('load', () => {
+            const mainWrapper = document.getElementById('main-wrapper');
+            // 1. 初始状态：让 canvas 里的 sections 彻底透明，但 canvas 容器和中心 X 保持可见
+      gsap.set("section", { opacity: 0 }); 
+    // 设置 CSS 变量，让背景 noise 初始不可见
+    gsap.set(mainWrapper, { "--noise-opacity": 0 }); 
+    
+    gsap.set(canvas, { 
+        opacity: 1, 
+        scale: 0.5, 
+        x: "0%", 
+        y: "0%" 
+    });
+    gsap.set(centerX, { opacity: 1 });
 
-  // ✅ all’inizio: SOLO X visibile, contenuti pagine nascosti
-  gsap.set("section", { opacity: 0 });
-  gsap.set(canvas, { scale: 1, x: "0%", y: "0%" });
-  gsap.set(centerX, { opacity: 1, scale: 1 });
+    const tl = gsap.timeline({ 
+        defaults: { ease: "power2.inOut" },
+        onComplete: () => {
+            introDone = true; 
+        }
+    });
 
-  const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+    // --- 动画序列 ---
+    
+    // 第一阶段：保持 1 秒只有 X
+    tl.to({}, { duration: 1 }) 
+    
+    // 第二阶段：Noise 背景和所有 Section 同时渐渐浮现
+    .to(["section", mainWrapper], { 
+        // 针对 section 改变 opacity，针对 wrapper 改变变量值
+        opacity: 1,
+        "--noise-opacity": 0.3, // 这里填你想要的最终噪点浓度
+        duration: 1.2,
+        stagger: 0.1 // 稍微错开一点，视觉效果更灵动
+    })
+    
+    // 第三阶段：停顿并缩放
+    .to({}, { duration: 0.5 })
+    .to(canvas, {
+        scale: 1,
+        duration: 1.1,
+        ease: "power3.inOut"
+    });
 
-// ✅ 一开始就显示 2x2 preview：X 在中间 + 4个section可见
-gsap.set("section", { opacity: 1 });
-gsap.set(canvas, { scale: 0.5, x: "0%", y: "0%" });
-gsap.set(centerX, { opacity: 1, scale: 1 });
+            // --- 交互控制 (保持不变) ---
+            window.addEventListener("wheel", (e) => {
+                if (!introDone) return;
+                handleWheel(e);
+            }, { passive: false });
 
-// ✅ 固定停 3 秒不动（保持 preview）
-tl.to({}, { duration: 3 });
+            window.addEventListener("keydown", (e) => {
+                if (!introDone || isScrolling) return;
+                let delta = 0;
+                if (e.key === "ArrowDown" || e.key === " ") delta = 1;
+                else if (e.key === "ArrowUp") delta = -1;
+                if (delta !== 0) {
+                    e.preventDefault();
+                    const newSection = currentSection + delta;
+                    if (newSection >= 1 && newSection <= totalSections) {
+                        handleWheel({ deltaY: delta * 100 });
+                    }
+                }
+            });
+        });
 
-// ✅ 然后直接 zoom in 到第一页（像你现在一样）
-tl.to(canvas, {
-  scale: 1,
-  duration: 1.1,
-  ease: "power2.inOut",
-  onComplete: () => {
-    introDone = true;
-  }
-});
-
-
-  // ✅ Scroll attivo SOLO dopo intro
-  window.addEventListener("wheel", (e) => {
-    if (!introDone) return;
-    handleWheel(e);
-  }, { passive: false });
-
-  window.addEventListener("keydown", (e) => {
-    if (!introDone) return;
-    if (isScrolling) return;
-
-    let delta = 0;
-    if (e.key === "ArrowDown" || e.key === " ") delta = 1;
-    else if (e.key === "ArrowUp") delta = -1;
-
-    if (delta !== 0) {
-      e.preventDefault();
-      const newSection = currentSection + delta;
-      if (newSection >= 1 && newSection <= totalSections) {
-        handleWheel({ deltaY: delta * 100 });
-      }
-    }
-  });
-});
-
- 
-
-
-        // 精确字符集填充
         const glyphSets = {
             maiuscola: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
             minuscola: "abcdefghijklmnopqrstuvwxyz".split(""),
