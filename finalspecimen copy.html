@@ -229,6 +229,16 @@
             transform-origin: top left;
             /* importantissimo per lo zoom pulito */
         }
+        /* nasconde scrollbar ma mantiene lo scroll */
+.custom-scrollbar {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE / Edge */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;              /* Chrome / Safari */
+}
+
     </style>
 </head>
 
@@ -497,9 +507,9 @@
         const glyphSets = {
             maiuscola: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
             minuscola: "abcdefghijklmnopqrstuvwxyz".split(""),
-            accenti: [..."ÀÁÈÉÌÍÒÓÙÚÝàáèéìíòóùúý"],
+            accenti: [..."àáèéòóúý"],
             numeri: "0123456789".split(""),
-            glifi: [..."!&'()*.·,/.:;?¿¡@#[]{}", ..."«»", ..."\\", ..."-%‰…—_`^+<=>|~≈", ..."\"\"\"'", ..." $£¥€"]
+            glifi: [..."!&()*,?¿¡@[]{}", ..."", ..."", ..."%‰", ..."", ..."$£¥€"]
         };
         const allChars = [...glyphSets.maiuscola, ...glyphSets.minuscola, ...glyphSets.accenti, ...glyphSets.numeri, ...glyphSets.glifi];
         const charGrid = document.getElementById('char-grid');
