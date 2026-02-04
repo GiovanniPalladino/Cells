@@ -443,42 +443,24 @@ window.addEventListener('load', () => {
 
   const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-  // 1) X appare per prima (animazione grande)
-  tl.fromTo(
-    "#center-x",
-    { scale: 5, opacity: 0 },
-    { scale: 1, opacity: 1, duration: 1.2 }
-  );
+// ✅ 一开始就显示 2x2 preview：X 在中间 + 4个section可见
+gsap.set("section", { opacity: 1 });
+gsap.set(canvas, { scale: 0.5, x: "0%", y: "0%" });
+gsap.set(centerX, { opacity: 1, scale: 1 });
 
-  // pausa 2s
-  tl.to({}, { duration: 2 });
+// ✅ 固定停 3 秒不动（保持 preview）
+tl.to({}, { duration: 3 });
 
-  // 2) Zoom OUT (per arrivare alla preview 2x2)
-  tl.to(canvas, {
-    scale: 0.5,
-    duration: 0.9,
-    ease: "power2.inOut"
-  });
+// ✅ 然后直接 zoom in 到第一页（像你现在一样）
+tl.to(canvas, {
+  scale: 1,
+  duration: 1.1,
+  ease: "power2.inOut",
+  onComplete: () => {
+    introDone = true;
+  }
+});
 
-  // 3) Fade-in contenuto delle 4 pagine (preview)
-  tl.to("section", {
-    opacity: 1,
-    duration: 0.6,
-    ease: "power2.out"
-  }, "-=0.2");
-
-  // (micro-pausa opzionale per “leggere” la preview)
-  tl.to({}, { duration: 0.4 });
-
-  // 4) Zoom IN sulla prima pagina (come adesso)
-  tl.to(canvas, {
-    scale: 1,
-    duration: 1.1,
-    ease: "power2.inOut",
-    onComplete: () => {
-      introDone = true;
-    }
-  });
 
   // ✅ Scroll attivo SOLO dopo intro
   window.addEventListener("wheel", (e) => {
