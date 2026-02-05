@@ -370,26 +370,29 @@ Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Fo
                 </div>
             </section>
 
-            <section id="section-4" class="h-screen w-screen flex flex-col px-20 pt-32 pb-4">
-                <div class="h-12 flex items-end mb-4">
-                    <h2 class="text-[20px]">reduced characters set</h2>
-                </div>
+<section id="section-4" class="h-screen w-screen flex flex-col ml-60 px-20 pt-32 pb-20"> <div class="flex items-end mb-6">
+        <h2 class="text-[20px] uppercase tracking-wider ml-[20px]">reduced characters set</h2>
+    </div>
 
-                <div class="flex-1 flex items-stretch min-h-0 gap-12">
-                    <div class="h-[90%] flex flex-col min-h-0 w-[50%] flex-shrink-0">
-                        <div class="flex-1 overflow-y-auto custom-scrollbar bg-transparent">
-                            <div id="char-grid" class="grid grid-cols-10 p-4 gap-2">
-                            </div>
-                        </div>
+    <div class="flex-1 flex items-stretch min-h-0 gap-12">
+        
+        <div class="h-full flex flex-col min-h-0 w-[50%] flex-shrink-0">
+            <div class="flex-1 overflow-y-auto custom-scrollbar bg-transparent">
+                <div id="char-grid" class="grid grid-cols-10 gap-2">
                     </div>
-                    <div class="h-[90%] flex-1 flex flex-col justify-end items-start">
-                        <span id="focus-char"
-                            class="text-[300px] leading-none text-[#2D7732] ml-[30px] pb-8 translate-y-6"
-                            style="display:inline-block;">a</span>
-                    </div>
+            </div>
+        </div>
 
-                </div>
-            </section>
+        <div class="h-full flex-1 flex flex-col justify-end items-start  border-[#2D7732]/20"> 
+            <span id="focus-char"
+                class="text-[350px] leading-[0.8] text-[#2D7732] " 
+                style="display:inline-block; transform: translateY(0.05em);">
+                a
+            </span>
+        </div>
+
+    </div>
+</section>
 
             <section id="section-3" class="h-screen w-screen flex items-center justify-center overflow-hidden">
                 <img src="image/part1.png" class="w-[90%] h-[90%] object-contain translate-x-[120px]" alt="part1 image">
