@@ -10,12 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <style>
-    #vibe-canvas {
-  transform-origin: top left;
-       opacity: 0;
-}
-
-
+        #vibe-canvas {
+            transform-origin: top left;
+            opacity: 0;
+        }
 
         @font-face {
             font-family: 'Cell-2901';
@@ -47,7 +45,24 @@
             touch-action: none;
         }
 
-        /* ===== 背景图：整张放在整个画布上（不 repeat） ===== */
+        #fixed-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: var(--primary-green);
+            z-index: 9999;
+
+            /* 添加这两行 */
+            opacity: 0;
+            pointer-events: none;
+
+            cursor: pointer;
+            letter-spacing: 0.05em;
+        }
+
+        /* 修改这一段 */
         #main-wrapper::before {
             content: "";
             position: absolute;
@@ -56,12 +71,13 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            /* 关键：铺满整个屏幕（会裁一点边） */
-            opacity: 0.3;
-            /* 先设 1，确保你能看到 */
-            pointer-events: none;
+            /* 关键修改：初始透明度设为 0，并关联一个 CSS 变量 */
+            opacity: var(--noise-opacity, 0);
+            pointer-events: auto;
+            cursor: pointer;
+            /* 可选：让它看起来可点 */
+
             z-index: 0;
-            /* 放在最底层 */
         }
 
         /* 让你的内容在背景图上面 */
@@ -75,6 +91,10 @@
             /* 让大 X 在噪点上面（想在下面就改成 1） */
         }
 
+        #editableText::placeholder {
+            color: rgba(45, 119, 50, 1);
+            /* 主绿色 + 更淡 */
+        }
 
         .custom-border {
             border: 1px solid rgba(45, 119, 50, 1);
@@ -231,11 +251,37 @@
             transform-origin: top left;
             /* importantissimo per lo zoom pulito */
         }
+
+        /* nasconde scrollbar ma mantiene lo scroll */
+        .custom-scrollbar {
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE / Edge */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+            /* Chrome / Safari */
+        }
+
+        #intro-x {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            line-height: 1;
+            color: var(--primary-green);
+            z-index: 99998;
+            /* sotto header, sopra tutto */
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
-    <!-- 滚动指示器 -->
+    <div id="fixed-header">Organismo Tipografico</div>
     <div id="scroll-tracker">
         <div class="scroll-dot active" data-section="1"></div>
         <div class="scroll-dot" data-section="2"></div>
@@ -254,18 +300,20 @@
                 <img src="image/grid1.png" alt="grid background" class="absolute w-[90%] h-[90%] object-contain transition-all duration-500
            left-[45%] 
            top-[50%] 
-           -translate-x-1/2 
+           -translate-x-1/2 ss
            -translate-y-1/2" />
             </section>
 
             <section id="section-2" class="h-screen w-screen px-20 pt-8 pb-4 overflow-hidden relative">
 
-                <div
-                    class="absolute top-[90px] left-[50%] w-[40%] h-[calc(100vh-160px)] custom-border p-12 bg-white/5 z-[10]">
+                <div class="absolute bottom-[70px] top-[200px] left-[50%] w-[40%]  z-[10]">
 
-                    <textarea id="editableText" spellcheck="false"
-                        class="w-full h-full bg-transparent border-none outline-none resize-none text-[80px] leading-[1.1] placeholder:opacity-20 custom-scrollbar"
-                        placeholder="(type the text here)">Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font Text here to try Cell Font </textarea>
+                    <textarea id="editableText" spellcheck="false" class="w-full h-full
+         bg-transparent border-none outline-none resize-none
+         text-[56px] leading-[1.3]
+         custom-scrollbar
+         px-8 py-6" placeholder="(type the text here)">
+Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. Text here to try Cell Font. </textarea>
                 </div>
 
                 <div
@@ -331,21 +379,17 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="h-[90%] flex-1 flex flex-col justify-end items-start">
-                        <div
-                            class="w-80 aspect-square border border-transparent flex ml-30 items-center justify-center bg-white/5 shadow-sm rounded-full overflow-hidden">
-                            <span id="focus-char" class="text-[300px] leading-none text-[#2D7732]">a</span>
-                        </div>
-
+                        <span id="focus-char"
+                            class="text-[300px] leading-none text-[#2D7732] ml-[30px] pb-8 translate-y-6"
+                            style="display:inline-block;">a</span>
                     </div>
+
                 </div>
             </section>
 
             <section id="section-3" class="h-screen w-screen flex items-center justify-center overflow-hidden">
-
                 <img src="image/part1.png" class="w-[90%] h-[90%] object-contain translate-x-[120px]" alt="part1 image">
-
             </section>
 
         </div>
@@ -362,6 +406,10 @@
         const lhSlider = document.getElementById('lhSlider');
         const lhVal = document.getElementById('lhVal');
         const scrollDots = document.querySelectorAll('.scroll-dot');
+        const fixedHeader = document.getElementById('fixed-header');
+        fixedHeader.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
 
         let currentSection = 1;
         let isScrolling = false;
@@ -431,89 +479,120 @@
             }
         }
 
-      let introDone = false;
+        let introDone = false;
 
-window.addEventListener('load', () => {
-  document.getElementById('vibe-canvas').style.opacity = "1";
+        window.addEventListener('load', () => {
+            const mainWrapper = document.getElementById('main-wrapper');
+            // 1. 初始状态：让 canvas 里的 sections 彻底透明，但 canvas 容器和中心 X 保持可见
+            gsap.set("section", { opacity: 0 });
+            // 设置 CSS 变量，让背景 noise 初始不可见
+            gsap.set(mainWrapper, { "--noise-opacity": 0 });
 
-  // ✅ all’inizio: SOLO X visibile, contenuti pagine nascosti
-  gsap.set("section", { opacity: 0 });
-  gsap.set(canvas, { scale: 1, x: "0%", y: "0%" });
-  gsap.set(centerX, { opacity: 1, scale: 1 });
+            gsap.set(centerX, { opacity: 0 });  // IMPORTANT: la X grande resta dov’è, solo invisibile
 
-  const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+            gsap.set(canvas, {
+                opacity: 1,
+                scale: 0.5,
+                x: "0%",
+                y: "0%"
+            });
+            gsap.set(centerX, { opacity: 1 });
 
-  // 1) X appare per prima (animazione grande)
-  tl.fromTo(
-    "#center-x",
-    { scale: 5, opacity: 0 },
-    { scale: 1, opacity: 1, duration: 1.2 }
-  );
+            gsap.set(centerX, { fontSize: "600px" });
 
-  // pausa 2s
-  tl.to({}, { duration: 2 });
+            gsap.set(centerX, {
+                position: "fixed",
+                top: "32%",
+                left: "50%",
+                xPercent: -50,
+                yPercent: -50
+            });
 
-  // 2) Zoom OUT (per arrivare alla preview 2x2)
-  tl.to(canvas, {
-    scale: 0.5,
-    duration: 0.9,
-    ease: "power2.inOut"
-  });
 
-  // 3) Fade-in contenuto delle 4 pagine (preview)
-  tl.to("section", {
-    opacity: 1,
-    duration: 0.6,
-    ease: "power2.out"
-  }, "-=0.2");
 
-  // (micro-pausa opzionale per “leggere” la preview)
-  tl.to({}, { duration: 0.4 });
+            const tl = gsap.timeline({
+                defaults: { ease: "power2.inOut" },
+                onComplete: () => {
+                    introDone = true;
+                }
+            });
 
-  // 4) Zoom IN sulla prima pagina (come adesso)
-  tl.to(canvas, {
-    scale: 1,
-    duration: 1.1,
-    ease: "power2.inOut",
-    onComplete: () => {
-      introDone = true;
-    }
-  });
+            // --- 动画序列 ---
+            tl.to({}, { duration: 1 })
+                .to(centerX, {
+                    fontSize: "300vh",
+                    duration: 0.6,
+                    ease: "power2.inOut"
+                })
+                .to(["section", mainWrapper], {
+                    opacity: 1,
+                    "--noise-opacity": 0.3,
+                    duration: 1.2,
+                    stagger: 0.1
+                })
+                .to({}, { duration: 0.5 })
+                .to(canvas, {
+                    scale: 1,
+                    duration: 1.1,
+                    ease: "power3.inOut",
+                    onComplete: () => { introDone = true; }
+                })
+                /* 🚩 在这里添加下面这行代码 */
+                .to("#fixed-header", { opacity: 1, pointerEvents: "auto", duration: 0.5 });
 
-  // ✅ Scroll attivo SOLO dopo intro
-  window.addEventListener("wheel", (e) => {
+
+
+            // --- 交互控制 (保持不变) ---
+            window.addEventListener("wheel", (e) => {
+                if (!introDone) return;
+                handleWheel(e);
+            }, { passive: false });
+
+// --- 修正后的交互控制 ---
+window.addEventListener("wheel", (e) => {
     if (!introDone) return;
     handleWheel(e);
-  }, { passive: false });
+}, { passive: false });
 
-  window.addEventListener("keydown", (e) => {
-    if (!introDone) return;
-    if (isScrolling) return;
+window.addEventListener("keydown", (e) => {
+    // 1. 如果动画没完，或者正在滚动，拦截所有控制键防止页面跳动
+    if (!introDone || isScrolling) {
+        if (e.key === " " || e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+        }
+        return;
+    }
 
+    // 2. 检查焦点：如果你在文本框(textarea)里打字，不要触发翻页
+    const isTyping = e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT';
+    
     let delta = 0;
-    if (e.key === "ArrowDown" || e.key === " ") delta = 1;
-    else if (e.key === "ArrowUp") delta = -1;
+    if (e.key === "ArrowDown") {
+        delta = 1;
+    } else if (e.key === "ArrowUp") {
+        delta = -1;
+    } else if (e.key === " " && !isTyping) { 
+        // 只有在【没打字】的时候，按空格才翻页
+        delta = 1;
+    }
 
     if (delta !== 0) {
-      e.preventDefault();
-      const newSection = currentSection + delta;
-      if (newSection >= 1 && newSection <= totalSections) {
-        handleWheel({ deltaY: delta * 100 });
-      }
+        // 关键：阻止浏览器默认的空格滚动行为
+        e.preventDefault(); 
+        const newSection = currentSection + delta;
+        if (newSection >= 1 && newSection <= totalSections) {
+            handleWheel({ deltaY: delta * 100 });
+        }
     }
-  });
-});
+}, { passive: false });
+        });
 
- 
-
-
-        // 精确字符集填充
         const glyphSets = {
             maiuscola: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
             minuscola: "abcdefghijklmnopqrstuvwxyz".split(""),
-            accenti: [..."ÀÁÈÉÌÍÒÓÙÚÝàáèéìíòóùúý"],
+            accenti: [..."àáèéòóúý"],
             numeri: "0123456789".split(""),
-            glifi: [..."!&'()*.·,/.:;?¿¡@#[]{}", ..."«»", ..."\\", ..."-%‰…—_`^+<=>|~≈", ..."\"\"\"'", ..." $£¥€"]
+            glifi: [..."!&()*,?¿¡@[]{}", ..."", ..."", ..."%‰", ..."", ..."$£¥€"]
         };
         const allChars = [...glyphSets.maiuscola, ...glyphSets.minuscola, ...glyphSets.accenti, ...glyphSets.numeri, ...glyphSets.glifi];
         const charGrid = document.getElementById('char-grid');
@@ -533,6 +612,14 @@ window.addEventListener('load', () => {
             const val = e.target.value;
             // 如果你希望输入时大 X 也变，取消下一行的注释
             // centerX.innerText = val.length > 0 ? val[val.length - 1] : "x";
+        });
+        let isFirstInput = true;
+
+        editableText.addEventListener("input", () => {
+            if (isFirstInput) {
+                editableText.value = "";
+                isFirstInput = false;
+            }
         });
 
         // 字体大小滑块控制
@@ -582,6 +669,7 @@ window.addEventListener('load', () => {
                 { scale: 1, duration: 0.2, ease: "back.out(2)" }
             );
         }
+
     </script>
 </body>
 
